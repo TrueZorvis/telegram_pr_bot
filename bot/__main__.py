@@ -2,15 +2,22 @@ import os
 import asyncio
 import logging
 from aiogram import Bot, Dispatcher
+from aiogram.types import BotCommand
 
-from commands import register_user_commands
+from bot.commands import register_user_commands
+from bot.commands.bot_commands import bot_commands
 
 
 async def main() -> None:
     logging.basicConfig(level=logging.DEBUG)
 
+    commands_for_bot = []
+    for cmd in bot_commands:
+        commands_for_bot.append(BotCommand(command=cmd[0], description=cmd[1]))
+
     dp = Dispatcher()
     bot = Bot(token=os.getenv('TOKEN'))
+    await bot.set_my_commands(commands=commands_for_bot)
 
     register_user_commands(dp)
 
