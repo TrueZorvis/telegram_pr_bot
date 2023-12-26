@@ -13,8 +13,26 @@ async def help_command(message: types.Message, command: CommandObject) -> types.
                 )
         else:
             return await message.answer('Команда не найдена')
+    return await help_func(message)
 
+
+async def help_func(message: types.Message) -> types.Message:
     return await message.answer(
         'Помощь и справка о боте\n'
         'Для того, чтобы получить информацию о команде используй /help <команда>\n'
+    )
+
+
+# async def call_help_func(call: types.CallbackQuery):
+#     return await call.message.answer(
+#         'Помощь и справка о боте\n'
+#         'Для того, чтобы получить информацию о команде используй /help <команда>\n'
+#     )
+
+
+async def call_help_func(call: types.CallbackQuery):
+    return await call.message.edit_text(
+        'Помощь и справка о боте\n'
+        'Для того, чтобы получить информацию о команде используй /help <команда>\n',
+        reply_markup=call.message.reply_markup
     )
