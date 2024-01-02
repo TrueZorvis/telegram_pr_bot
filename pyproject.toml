@@ -8,6 +8,8 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 aiogram = "^3.2.0"
+asyncpg = "^0.29.0"
+sqlalchemy = "1.4.50"
 
 
 [build-system]
