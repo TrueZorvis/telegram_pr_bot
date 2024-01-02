@@ -1,5 +1,6 @@
 from aiogram import types
 from aiogram.filters import CommandObject
+from aiogram.utils.keyboard import InlineKeyboardButton
 
 from bot.commands.bot_commands import bot_commands
 
@@ -34,5 +35,7 @@ async def call_help_func(call: types.CallbackQuery):
     return await call.message.edit_text(
         'Помощь и справка о боте\n'
         'Для того, чтобы получить информацию о команде используй /help <команда>\n',
-        reply_markup=call.message.reply_markup
+        reply_markup=call.message.reply_markup.inline_keyboard.append([
+            InlineKeyboardButton(text='Назад', callback_data='clear')
+        ])
     )
