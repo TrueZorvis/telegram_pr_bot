@@ -9,7 +9,7 @@ from bot.commands import register_user_commands
 from bot.commands.bot_commands import bot_commands
 from bot.middlewares.register_check import RegisterCheck
 
-from db import BaseModel, create_async_engine, get_session_maker, proceed_schemas
+from db import create_async_engine, get_session_maker
 
 
 async def main() -> None:
@@ -40,8 +40,8 @@ async def main() -> None:
 
     async_engine = create_async_engine(postgres_url)
     session_maker = get_session_maker(async_engine)
-    await proceed_schemas(async_engine, BaseModel.metadata)
-
+    # Делегировано alembic
+    # await proceed_schemas(async_engine, BaseModel.metadata)
     await dp.start_polling(bot, session_maker=session_maker)
 
 

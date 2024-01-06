@@ -11,6 +11,8 @@ def get_session_maker(engine: AsyncEngine) -> sessionmaker:
     return sessionmaker(engine, class_=AsyncSession)
 
 
+@DeprecationWarning
 async def proceed_schemas(engine: AsyncEngine, metadata) -> None:
-    async with engine.begin() as conn:
-        await conn.run_sync(metadata.create_all)
+    # async with engine.begin() as conn:
+    #     await conn.run_sync(metadata.create_all)
+    ...
