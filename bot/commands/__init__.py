@@ -8,6 +8,7 @@ from bot.commands.start import start
 from bot.commands.help import help_command, help_func, call_help_func
 from bot.commands.settings import settings_command, settings_callback
 from bot.commands.callback_data_states import TestCallbackData
+from bot.middlewares.register_check import RegisterCheck
 
 
 def register_user_commands(router: Router) -> None:
@@ -19,4 +20,7 @@ def register_user_commands(router: Router) -> None:
 
     router.callback_query.register(call_help_func, F.data == 'help')
     router.callback_query.register(settings_callback, TestCallbackData.filter())
+
+    router.message.middleware(RegisterCheck)
+    router.callback_query.middleware(RegisterCheck)
 
