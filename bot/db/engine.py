@@ -12,5 +12,5 @@ def get_session_maker(engine: AsyncEngine) -> sessionmaker:
 
 
 async def proceed_schemas(engine: AsyncEngine, metadata) -> None:
-    async with engine.connect() as conn:
+    async with engine.begin() as conn:
         await conn.run_sync(metadata.create_all)
