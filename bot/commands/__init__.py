@@ -20,7 +20,3 @@ def register_user_commands(router: Router) -> None:
 
     router.callback_query.register(call_help_func, F.data == 'help')
     router.callback_query.register(settings_callback, TestCallbackData.filter())
-
-    router.message.middleware(RegisterCheck)
-    router.callback_query.middleware(RegisterCheck)
-

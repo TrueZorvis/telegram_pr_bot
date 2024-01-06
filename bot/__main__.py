@@ -21,8 +21,8 @@ async def main() -> None:
 
     dp = Dispatcher()
 
-    dp.message.middleware(RegisterCheck)
-    dp.callback_query.middleware(RegisterCheck)
+    dp.message.middleware(RegisterCheck())
+    dp.callback_query.middleware(RegisterCheck())
 
     bot = Bot(token=os.getenv('TOKEN'))
     await bot.set_my_commands(commands=commands_for_bot)
