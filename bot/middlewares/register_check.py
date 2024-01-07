@@ -2,10 +2,7 @@ from typing import Callable, Any, Awaitable
 
 from aiogram import BaseMiddleware
 from aiogram.types import Message, CallbackQuery
-from sqlalchemy import select
-from sqlalchemy.orm import sessionmaker
-
-from bot.db import User
+from bot.db.user import is_user_exists, create_user
 
 
 class RegisterCheck(BaseMiddleware):
@@ -15,23 +12,16 @@ class RegisterCheck(BaseMiddleware):
         event: Message | CallbackQuery,
         data: dict[str, Any]
     ) -> Any:
-        session_maker: sessionmaker = data.get('session_maker')
-        async with session_maker() as session:
-            async with session.begin():
-                result = await session.execute(select(User).where(User.user_id == event.from_user.id))
-                user: User = result.one_or_none()
+        if event.web_app_data:
+            return await handler(event, data)
 
-                if user is not None:
-                    pass
-                else:
-                    user = User(
-                        user_id=event.from_user.id,
-                        username=event.from_user.username
-                    )
-                    await session.merge(user)
-                    if isinstance(event, Message):
-                        await event.answer('Ты успешно зарегистрирован(а)!')
-                    else:
-                        await event.message.answer('Ты успешно зарегистрирован(а)!')
+        session_maker = data['session_maker']
+        redis = data['redis']
+        user = event.from_user
+
+        if not await is_user_exists(user_id=event.from_user.id, session_maker=session_maker, redis=redis):
+            await create_user(user_id=event.from_user.id,
+                              username=event.from_user.username, session_maker=session_maker, locale=user.language_code)
+            await data['bot'].send_message(event.from_user.id, 'Ты успешно зарегистрирован(а)!')
 
         return await handler(event, data)
